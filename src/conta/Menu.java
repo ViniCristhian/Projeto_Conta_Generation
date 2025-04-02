@@ -22,22 +22,6 @@ public class Menu {
 		String titular;
 		float saldo, limite, valor;
 
-		System.out.println("\nCriar Contas\n");
-
-		ContaCorrente cc1 = new ContaCorrente(contaController.gerarNumero(), 123, 1, "Joao da Silva", 1000f, 100.0f);
-		contaController.cadastrar(cc1);
-
-		ContaCorrente cc2 = new ContaCorrente(contaController.gerarNumero(), 124, 1, "Maria da Silva", 2000f, 100.0f);
-		contaController.cadastrar(cc2);
-
-		ContaPoupanca cp1 = new ContaPoupanca(contaController.gerarNumero(), 125, 2, "Mariana dos Santos", 4000f, 12);
-		contaController.cadastrar(cp1);
-
-		ContaPoupanca cp2 = new ContaPoupanca(contaController.gerarNumero(), 125, 2, "Juliana Ramos", 8000f, 15);
-		contaController.cadastrar(cp2);
-
-		contaController.listarTodas();
-
 		while (true) {
 
 			System.out.println(Cores.TEXT_BLUE + "*****************************************************");
