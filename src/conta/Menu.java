@@ -5,6 +5,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import conta.controller.ContaController;
+import conta.model.Conta;
 import conta.model.ContaCorrente;
 import conta.model.ContaPoupanca;
 import conta.util.Cores;
@@ -17,10 +18,10 @@ public class Menu {
 
 		Scanner leia = new Scanner(System.in);
 
-		int opcao, agencia, tipo, aniversario;
+		int opcao, numero, agencia, tipo, aniversario;
 		String titular;
 		float saldo, limite;
-		
+
 		System.out.println("\nCriar Contas\n");
 
 		ContaCorrente cc1 = new ContaCorrente(contaController.gerarNumero(), 123, 1, "Joao da Silva", 1000f, 100.0f);
@@ -75,81 +76,157 @@ public class Menu {
 			}
 
 			switch (opcao) {
-			case 1:
-				System.out.println(Cores.TEXT_WHITE + "Criar Conta\n\n");
-
-				System.out.print("Digite o Número da Agência: ");
-				agencia = leia.nextInt();
-
-				System.out.print("Digite o Nome do Titular: ");
-				leia.skip("\\R?");
-				titular = leia.nextLine();
-
-				do {
-					System.out.print("Digite o Tipo da Conta (1-CC ou 2-CP): ");
-					tipo = leia.nextInt();
-
-				} while (tipo < 1 && tipo > 2);
-
-				System.out.print("Digite o Saldo da Conta (R$): ");
-				saldo = leia.nextFloat();
-
-				switch (tipo) {
-					case 1 -> {
-						System.out.print("Digite o Limite da Crédito (R$): ");
-						limite = leia.nextFloat();
-						contaController.cadastrar(new ContaCorrente(contaController.gerarNumero(), agencia, tipo, titular, saldo, limite));
-					}
+			
+				case 1:
 					
-					case 2 -> {
-						System.out.print("Digite o dia do Aniversario da Conta: ");
-						aniversario = leia.nextInt();
-						contaController.cadastrar(new ContaPoupanca(contaController.gerarNumero(), agencia, tipo, titular, saldo, aniversario));
+					System.out.println(Cores.TEXT_WHITE + "Criar Conta\n\n");
+	
+					System.out.print("Digite o Número da Agência: ");
+					agencia = leia.nextInt();
+	
+					System.out.print("Digite o Nome do Titular: ");
+					leia.skip("\\R?");
+					titular = leia.nextLine();
+	
+					do {
+						System.out.print("Digite o Tipo da Conta (1-CC ou 2-CP): ");
+						tipo = leia.nextInt();
+	
+					} while (tipo < 1 && tipo > 2);
+	
+					System.out.print("Digite o Saldo da Conta (R$): ");
+					saldo = leia.nextFloat();
+	
+					switch (tipo) {
+					
+						case 1 -> {
+							System.out.print("Digite o Limite da Crédito (R$): ");
+							limite = leia.nextFloat();
+							contaController.cadastrar(
+									new ContaCorrente(contaController.gerarNumero(), agencia, tipo, titular, saldo, limite));
+						}
+		
+						case 2 -> {
+							System.out.print("Digite o dia do Aniversario da Conta: ");
+							aniversario = leia.nextInt();
+							contaController.cadastrar(new ContaPoupanca(contaController.gerarNumero(), agencia, tipo, titular,
+									saldo, aniversario));
+						}
 					}
-				}
-
-				keyPress();
-				break;
-			case 2:
-				System.out.println(Cores.TEXT_WHITE + "Listar todas as Contas\n\n");
-				contaController.listarTodas();
-				keyPress();
-				break;
-			case 3:
-				System.out.println(Cores.TEXT_WHITE + "Consultar dados da Conta - por número\n\n");
-				keyPress();
-
-				break;
-			case 4:
-				System.out.println(Cores.TEXT_WHITE + "Atualizar dados da Conta\n\n");
-				keyPress();
-
-				break;
-			case 5:
-				System.out.println(Cores.TEXT_WHITE + "Apagar a Conta\n\n");
-				keyPress();
-
-				break;
-			case 6:
-				System.out.println(Cores.TEXT_WHITE + "Saque\n\n");
-				keyPress();
-
-				break;
-			case 7:
-				System.out.println(Cores.TEXT_WHITE + "Depósito\n\n");
-				keyPress();
-
-				break;
-			case 8:
-				System.out.println(Cores.TEXT_WHITE + "Transferência entre Contas\n\n");
-				keyPress();
-
-				break;
-			default:
-				System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida!\n" + Cores.TEXT_RESET);
-				keyPress();
-
-				break;
+	
+					keyPress();
+					break;
+	
+				case 2:
+					
+					System.out.println(Cores.TEXT_WHITE + "Listar todas as Contas\n\n");
+					contaController.listarTodas();
+					keyPress();
+					break;
+	
+				case 3:
+					
+					System.out.println(Cores.TEXT_WHITE + "Consultar dados da Conta - por número\n\n");
+	
+					System.out.print("Digite o número da Conta: ");
+					numero = leia.nextInt();
+	
+					contaController.procurarPorNumero(numero);
+	
+					keyPress();
+					break;
+	
+				case 4:
+					
+					System.out.println(Cores.TEXT_WHITE + "Atualizar dados da Conta\n\n");
+	
+					System.out.print("Digite o número da conta: ");
+	
+					numero = leia.nextInt();
+	
+					Conta buscaConta = contaController.buscarNaCollection(numero);
+	
+					if (buscaConta != null) {
+	
+						tipo = buscaConta.getTipo();
+						
+						System.out.print("Digite o Numero da Agência: ");
+						agencia = leia.nextInt();
+	
+						System.out.print("Digite o Nome do Titular: ");
+						leia.skip("\\R?");
+						titular = leia.nextLine();
+	
+						System.out.print("Digite o Saldo da Conta (R$): ");
+						saldo = leia.nextFloat();
+	
+						switch (tipo) {
+	
+							case 1 -> {
+		
+								System.out.print("Digite o Limite de Credito (R$): ");
+								limite = leia.nextFloat();
+								
+								contaController.atualizar(new ContaCorrente(numero, agencia, tipo, titular, saldo, limite));
+							}
+		
+							case 2 -> {
+		
+								System.out.print("Digite o dia do Aniversario da Conta: ");
+								aniversario = leia.nextInt();
+								
+								contaController
+										.atualizar(new ContaPoupanca(numero, agencia, tipo, titular, saldo, aniversario));
+							}
+		
+							default -> {
+		
+								System.out.println("Tipo de conta invalido!");
+		
+							}
+						}
+	
+					} else {
+	
+						System.out.println("A Conta nao foi encontrada!");
+	
+					}
+	
+					keyPress();
+					break;
+	
+				case 5:
+					
+					System.out.println(Cores.TEXT_WHITE + "Apagar a Conta\n\n");
+					
+					System.out.print("Digite o número da conta: ");
+					numero = leia.nextInt();
+					
+					contaController.deletar(numero);
+					
+					keyPress();
+					break;
+					
+				case 6:
+					System.out.println(Cores.TEXT_WHITE + "Saque\n\n");
+					keyPress();
+	
+					break;
+				case 7:
+					System.out.println(Cores.TEXT_WHITE + "Depósito\n\n");
+					keyPress();
+	
+					break;
+				case 8:
+					System.out.println(Cores.TEXT_WHITE + "Transferência entre Contas\n\n");
+					keyPress();
+	
+					break;
+				default:
+					System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida!\n" + Cores.TEXT_RESET);
+					keyPress();
+	
+					break;
 			}
 		}
 	}
